@@ -1,0 +1,24 @@
+import { StatusBar } from "expo-status-bar";
+import { PropsWithChildren } from "react";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
+
+export function BaseScreen(props: PropsWithChildren) {
+  return (
+    <View style={styles.mainContainer}>
+      {props.children}
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    width: Dimensions.get("screen").width,
+    height: Dimensions.get("screen").height,
+    backgroundColor: "#27272a",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // gap: 20,
+  },
+});
