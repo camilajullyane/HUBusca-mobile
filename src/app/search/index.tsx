@@ -12,6 +12,7 @@ import { Search as SearchIcon } from "lucide-react-native";
 import { UserService } from "../../service/userService";
 import { User } from "../../@types/userType";
 import { UserCard } from "../../components/UserCard";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Search() {
   const [text, setText] = useState<string>("");
@@ -19,13 +20,28 @@ export default function Search() {
 
   const handleTextChange = async () => {
     try {
-      // console.log(text);
       const response = await UserService.getUser(text);
       setUserData(response);
-      console.log(userData);
+      saveUsersToHistory(response);
       setText("");
     } catch (error) {
       console.error("Erro ao buscar usuário", error);
+    }
+  };
+
+  const saveUsersToHistory = async (user: User) => {
+    try {
+      const prevHistory = await AsyncStorage.getItem("@search_history");
+      const history: User[] = prevHistory ? JSON.parse(prevHistory) : [];
+
+      const userAlreadyOnList = history.some((u) => u.login === user.login);
+
+      if (!userAlreadyOnList) {
+        history.push(user);
+        await AsyncStorage.setItem("@search_history", JSON.stringify(history));
+      }
+    } catch (error) {
+      console.error("Erro ao salvar no histórico:", error);
     }
   };
 

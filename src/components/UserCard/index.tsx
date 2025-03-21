@@ -1,6 +1,7 @@
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Text, Image, Pressable } from "react-native";
 import { User } from "../../@types/userType";
 import { MapPin } from "lucide-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface UserCardProps {
   user: User;
@@ -26,6 +27,11 @@ export function UserCard({ user }: UserCardProps) {
             {user.location}
           </Text>
         </View>
+        <Pressable>
+          <View>
+            <Text>Repositórios</Text>
+          </View>
+        </Pressable>
       </View>
     </View>
   );
