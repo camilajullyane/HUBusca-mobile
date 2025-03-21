@@ -9,62 +9,88 @@ import {
 import { BaseScreen } from "../../components/BaseScreen";
 import { useState } from "react";
 import { Search as SearchIcon } from "lucide-react-native";
+import { UserService } from "../../service/userService";
+import { User } from "../../@types/userType";
+import { UserCard } from "../../components/UserCard";
 
 export default function Search() {
   const [text, setText] = useState<string>("");
+  const [userData, setUserData] = useState<User>();
 
-  const handleTextChange = () => {
-    console.log(text);
-    setText("");
+  const handleTextChange = async () => {
+    try {
+      // console.log(text);
+      const response = await UserService.getUser(text);
+      setUserData(response);
+      console.log(userData);
+      setText("");
+    } catch (error) {
+      console.error("Erro ao buscar usuário", error);
+    }
   };
 
   return (
     <BaseScreen>
-      <View style={styles.mainContainer}>
-        <Text style={styles.inputLabel}>Procure por um perfil</Text>
-        <View style={styles.inputContainer}>
+      <Text style={styles.inputLabel}>Procure por um perfil no github</Text>
+
+      <View style={styles.inputContainer}>
+        <View style={styles.inputWrapper}>
           <TextInput
             style={styles.input}
-            placeholder="Digite algo"
+            placeholder="Digite um nick"
+            placeholderTextColor={"#838b9c"}
             value={text}
             onChangeText={setText}
-          ></TextInput>
+          />
 
-          <Pressable onPress={handleTextChange}>
-            <View style={styles.button}>
-              <SearchIcon color={"#000"} />
-            </View>
+          <Pressable onPress={handleTextChange} style={styles.button}>
+            <SearchIcon color={"#fff"} size={25} />
           </Pressable>
         </View>
       </View>
+
+      {userData && (
+        <View style={styles.mainContainer}>
+          {userData && <UserCard user={userData} />}
+        </View>
+      )}
     </BaseScreen>
   );
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
-    width: "80%",
-    height: 400,
+    width: "90%",
+    height: 500,
     padding: 20,
-    backgroundColor: "#52525C",
+    backgroundColor: "#1B1F28",
     borderRadius: 8,
     gap: 10,
   },
 
   inputContainer: {
     width: "100%",
+
+    padding: 20,
+  },
+
+  inputWrapper: {
+    width: "100%",
+    height: 43,
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#141C30",
+    borderRadius: 4,
+    paddingHorizontal: 10,
   },
 
   input: {
-    width: "80%",
-    height: 40,
-    borderWidth: 1,
-    padding: 10,
-    backgroundColor: "#90A1B9",
+    flex: 1,
+    height: "100%",
+    padding: 0,
+    backgroundColor: "#141C30",
     color: "#fff",
-    borderRadius: 4,
+    fontSize: 16,
   },
 
   inputLabel: {
@@ -73,13 +99,8 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: "100%",
-    height: 40,
     padding: 8,
-    // height: "100%",
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 4,
   },
 });

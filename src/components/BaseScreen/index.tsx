@@ -6,7 +6,12 @@ export function BaseScreen(props: PropsWithChildren) {
   return (
     <View style={styles.mainContainer}>
       {props.children}
-      <StatusBar style="auto" />
+      <StatusBar
+        style="light"
+        backgroundColor="#282274"
+        translucent={true}
+        hideTransitionAnimation="fade"
+      />
     </View>
   );
 }
@@ -15,7 +20,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     width: Dimensions.get("screen").width,
     height: Dimensions.get("screen").height,
-    backgroundColor: "#27272a",
+    backgroundColor: "#282274",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
